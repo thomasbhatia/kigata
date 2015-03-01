@@ -5,13 +5,14 @@ from flask import Flask
 
 # WSGI needs to find 'application'
 application = Flask(__name__)
+application.config.from_object('app.settings.Config')
 
 # Register the resources below
 RestApiView.register(application)
 
 if __name__ == '__main__':
     application.run(
-        debug=True,
-        host='0.0.0.0',
-        port=8080,
+        debug=application.config['DEBUG'],
+        host=application.config['HOST'],
+        port=application.config['PORT'],
         )
