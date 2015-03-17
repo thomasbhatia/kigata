@@ -23,8 +23,6 @@ def create_app(package_name, package_path, settings_override=None):
         response.headers.add('Access-Control-Allow-Headers',
                              'Content-Type, X-Requested-With, Authorization, X-HTTP-Method-Override')
         response.headers.add('Access-Control-Max-Age', '1728000')
-        # Response Server is also handled by mod security.
-        # response.headers.add('Server', app.config['FULL_SERVER_NAME'])
 
         """
         Add headers to both force latest IE rendering engine or Chrome Frame
