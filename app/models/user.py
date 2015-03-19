@@ -62,4 +62,5 @@ class UserSchema(Schema):
     last_accessed = fields.DateTime()
     date_joined = fields.DateTime(dump_only=True)
     secret = fields.Str()
+    email = fields.Email()
 
