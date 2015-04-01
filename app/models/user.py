@@ -21,6 +21,12 @@ class User(Model):
             cls.set(data)
 
     @classmethod
+    def update_passwd(cls, *args):
+        if args:
+            data = dict(secret=args[0])
+            cls.set(data)
+
+    @classmethod
     def is_admin(cls):
         if hasattr(cls, 'is_admin'):
             if cls.is_admin is True:
@@ -62,5 +68,5 @@ class UserSchema(Schema):
     last_accessed = fields.DateTime()
     date_joined = fields.DateTime(dump_only=True)
     secret = fields.Str()
-    email = fields.Email()
+    email = fields.Email(required=True)
 
