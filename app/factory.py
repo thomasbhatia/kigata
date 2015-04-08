@@ -11,9 +11,7 @@ def create_app(package_name, package_path, settings_override=None):
     # APP secret key
     #app.secret_key = '\xa7\xf11Y\xfa`\xd9\xe8f\x94\x00w\x01n\xa2\xe1\xb2\x9d\x00\xf6o\x1b\x17U'
 
-    global mongodb
-    mongodb = PyMongo()
-    mongodb.init_app(app)    
+    configure(app)   
 
     @app.after_request
     def after(response):
@@ -34,3 +32,22 @@ def create_app(package_name, package_path, settings_override=None):
         return response
 
     return app
+
+def configure(app):
+    # initialise mongodb connection.
+    configure_mongodb(app)
+
+    # Uncomment following line to initialise second mongodb connection.
+    # configure_mongodb2(app) 
+
+def configure_mongodb(app):
+    app.logger.info('configure_mongodb')
+    global mongodb
+    mongodb = PyMongo()
+    mongodb.init_app(app, config_prefix=app.config['MONGO_PREFIX'])
+
+def configure_mongodb2(app):
+    app.logger.info('configure_mongodb2')
+    global mongodb2
+    mongodb2 = PyMongo()
+    mongodb2.init_app(app, config_prefix=app.config['MONGO2_PREFIX'])
