@@ -1,4 +1,19 @@
 import os
+
+# Default settings example!
+# To use this file set ENV like this:
+# export SERVER_ENV="DEV" 
+# or
+# export SERVER_ENV="TEST" 
+#
+# To test the live example file, unset SERVER_ENV and set KIGATA_SETTINGS 
+
+# For option details see:
+# See http://flask.pocoo.org/docs/0.10/config/
+
+# This helps to get errors into httpd logs
+PROPAGATE_EXCEPTIONS = True
+
 class Config(object):
     server_env = os.getenv('SERVER_ENV')
 
