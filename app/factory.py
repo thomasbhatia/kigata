@@ -7,9 +7,11 @@ def create_app(package_name, package_path, settings_override=None):
 
     # Load config from file app/settings.py
     app.config.from_object('app.settings.Config')
+    # Load config from location specified in ENV
+    app.config.from_envvar("KIGATA_SETTINGS", silent=True) 
+    # Override settings
+    app.config.from_object(settings_override)
 
-    # APP secret key
-    #app.secret_key = '\xa7\xf11Y\xfa`\xd9\xe8f\x94\x00w\x01n\xa2\xe1\xb2\x9d\x00\xf6o\x1b\x17U'
 
     configure(app)   
 
