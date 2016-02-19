@@ -2,17 +2,21 @@ from flask import request, jsonify, current_app
 from flask.ext.classy import FlaskView, route
 from app.mod_auth import login_required
 
+
 # We have User and UserSchema functions here to escape the circular import hell.
 def User(arg=None):
     from app.models.user import User
+
     return User(arg)
+
 
 def UserSchema():
     from app.models.user import UserSchema
+
     return UserSchema()
 
-class RestApiView(FlaskView):
 
+class RestApiView(FlaskView):
     route_base = '/'
 
     @route('/helloworld', methods=['GET'])
@@ -87,10 +91,9 @@ class RestApiView(FlaskView):
         current_app.logger.info(user)
 
         if 'secret' in json_data:
-		    User.update_passwd(json_data['secret'])
+            User.update_passwd(json_data['secret'])
 
         response = dict(status='success', data='User updated')
         head = 200
 
         return jsonify(response), head
-        

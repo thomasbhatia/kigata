@@ -1,6 +1,7 @@
 from flask import request, jsonify, current_app, abort, make_response,json, session
 from functools import wraps
 
+
 def authenticate(authorization):
     from app.models.user import User
     import jwt
