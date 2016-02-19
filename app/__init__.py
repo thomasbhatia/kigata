@@ -1,5 +1,4 @@
 from . import factory
-from flask import jsonify
 
 
 def create_app(settings_override=None):
