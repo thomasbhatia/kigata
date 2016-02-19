@@ -14,88 +14,135 @@ import os
 # This helps to get errors into httpd logs
 PROPAGATE_EXCEPTIONS = True
 
-class Config(object):
-    server_env = os.getenv('SERVER_ENV')
 
-        if server_env == 'DEV':
-            # Server Listening IP address or FQDN
-            HOST = '0.0.0.0'
-            # Serve Port
-            PORT = 8081
-            # Server name
-            SERVER_NAME = '127.0.0.1:8080'
-            # Debug True or False
-            DEBUG = True
+# Set the appropriate config in app/factory.py under app.config.from_object('app.settings.DevConfig')
+class DevConfig(object):
+    # server_env = os.getenv('SERVER_ENV')
 
-            # APP secret key
-            SECRET_KEY = '?\xb3,\xb1\x8d\xa3"<\x9c\xb0@\x0f5\xab,w\xff\x8d$0\x13\x8b81'
+    # Server Listening IP address or FQDN
+    HOST = '0.0.0.0'
+    # Serve Port
+    PORT = 8080
+    # Server name
+    SERVER_NAME = '0.0.0.0:8080'
+    # Debug True or False
+    DEBUG = True
 
-            ## Mongodb Config 
-            # DB 1:
-            MONGO_PREFIX = 'MONGO_TEST1'
-            # Mongo Host
-            MONGO_TEST1_HOST = 'ds054321.mongolab.com'
-            # Mongo Port
-            MONGO_TEST1_PORT = 54321
-            # Mongo Username
-            MONGO_TEST1_USERNAME = 'user1'
-            # Mongo Password
-            MONGO_TEST1_PASSWORD = 'passwd1'
-            # Mongo DB name
-            MONGO_ETAAA_DBNAME = 'db_test1'
+    # APP secret key
+    SECRET_KEY = '?\xb3,\xb1\x8d\xa3"<\x9c\xb0@\x0f5\xab,w\xff\x8d$0\x13\x8b81'
 
-            ## Mongodb Config 
-            # DB 2:
-            MONGO_PREFIX = 'MONGO_TEST2'
-            # Mongo Host
-            MONGO_TEST2_HOST = 'ds012345.mongolab.com'
-            # Mongo Port
-            MONGO_TEST2_PORT = 12345
-            # Mongo Username
-            MONGO_TEST2_USERNAME = 'user2'
-            # Mongo Password
-            MONGO_TEST2_PASSWORD = 'passwd2'
-            # Mongo DB name
-            MONGO_TEST2_DBNAME = 'db_test2'
+    ## Mongodb Config
+    # DB 1:
+    # MONGO_PREFIX = 'MONGO_TEST1'
+    # Mongo Server
+    MONGO_SERVER = 'ds039301.mongolab.com'
+    # Mongo Port
+    MONGO_PORT = '39301'
+    # Mongo Username
+    MONGO_USERNAME = 'drone2'
+    # Mongo Password
+    MONGO_PASSWORD = 'icarus'
+    # Mongo DB name
+    MONGO_DBNAME = 'etgeonet'
 
-        elif server_env == 'DEV':
-            # Server Listening IP address or FQDN
-            HOST = '0.0.0.0'
-            # Serve Port
-            PORT = 8081
-            # Server name
-            SERVER_NAME = '127.0.0.1:8081'
-            # Debug True or False
-            DEBUG = True
 
-            # APP secret key
-            SECRET_KEY = '?\xb3,\xb1\x9a\xa3"<\x9c\xb0@\x0f5\xab,w\xff\x8d$0\x13\x8b81'
+    ## Mongodb Config
+    # DB 2:
+    MONGO_PREFIX2 = 'MONGO_TEST2'
+    # Mongo Host
+    MONGO_SERVER2 = 'ds012345.mongolab.com'
+    # Mongo Port
+    MONGO_PORT2 = 12345
+    # Mongo Username
+    MONGO_USERNAME2 = 'user2'
+    # Mongo Password
+    MONGO_PASSWORD2 = 'passwd2'
+    # Mongo DB name
+    MONGO_DBNAME2 = 'db_test2'
 
-            ## Mongodb Config 
-            # DB 1:
-            MONGO_PREFIX = 'MONGO_TEST1'
-            # Mongo Host
-            MONGO_TEST1_HOST = 'ds054321.mongolab.com'
-            # Mongo Port
-            MONGO_TEST1_PORT = 54321
-            # Mongo Username
-            MONGO_TEST1_USERNAME = 'user1'
-            # Mongo Password
-            MONGO_TEST1_PASSWORD = 'passwd1'
-            # Mongo DB name
-            MONGO_ETAAA_DBNAME = 'db_test1'
 
-            ## Mongodb Config 
-            # DB 2:
-            MONGO_PREFIX = 'MONGO_TEST2'
-            # Mongo Host
-            MONGO_TEST2_HOST = 'ds012345.mongolab.com'
-            # Mongo Port
-            MONGO_TEST2_PORT = 12345
-            # Mongo Username
-            MONGO_TEST2_USERNAME = 'user2'
-            # Mongo Password
-            MONGO_TEST2_PASSWORD = 'passwd2'
-            # Mongo DB name
-            MONGO_TEST2_DBNAME = 'db_test2'
+class TestConfig(object):
+    # Server Listening IP address or FQDN
+    HOST = '0.0.0.0'
+    # Serve Port
+    PORT = 8081
+    # Server name
+    SERVER_NAME = '127.0.0.1:8081'
+    # Debug True or False
+    DEBUG = True
+
+    # APP secret key
+    SECRET_KEY = '?\xb3,\xb1\x9a\xa3"<\x9c\xb0@\x0f5\xab,w\xff\x8d$0\x13\x8b81'
+
+    ## Mongodb Config
+    # DB 1:
+    # MONGO_PREFIX = 'MONGO_TEST1'
+    # Mongo Server
+    MONGO_SERVER = 'ds039301.mongolab.com'
+    # Mongo Port
+    MONGO_PORT = '39301'
+    # Mongo Username
+    MONGO_USERNAME = 'drone2'
+    # Mongo Password
+    MONGO_PASSWORD = 'icarus'
+    # Mongo DB name
+    MONGO_DBNAME = 'etgeonet'
+
+
+    ## Mongodb Config
+    # DB 2:
+    MONGO_PREFIX2 = 'MONGO_TEST2'
+    # Mongo Host
+    MONGO_SERVER2 = 'ds012345.mongolab.com'
+    # Mongo Port
+    MONGO_PORT2 = 12345
+    # Mongo Username
+    MONGO_USERNAME2 = 'user2'
+    # Mongo Password
+    MONGO_PASSWORD2 = 'passwd2'
+    # Mongo DB name
+    MONGO_DBNAME2 = 'db_test2'
+
+
+class LiveConfig(object):
+    # Server Listening IP address or FQDN
+    HOST = '0.0.0.0'
+    # Serve Port
+    PORT = 8081
+    # Server name
+    SERVER_NAME = '127.0.0.1:8081'
+    # Debug True or False
+    DEBUG = True
+
+    # APP secret key
+    SECRET_KEY = '?\xb3,\xb1\x9a\xa3"<\x9c\xb0@\x0f5\xab,w\xff\x8d$0\x13\x8b81'
+
+    ## Mongodb Config
+    # DB 1:
+    # MONGO_PREFIX = 'MONGO_TEST1'
+    # Mongo Server
+    MONGO_SERVER = 'ds039301.mongolab.com'
+    # Mongo Port
+    MONGO_PORT = '39301'
+    # Mongo Username
+    MONGO_USERNAME = 'drone2'
+    # Mongo Password
+    MONGO_PASSWORD = 'icarus'
+    # Mongo DB name
+    MONGO_DBNAME = 'etgeonet'
+
+
+    ## Mongodb Config
+    # DB 2:
+    MONGO_PREFIX2 = 'MONGO_TEST2'
+    # Mongo Host
+    MONGO_SERVER2 = 'ds012345.mongolab.com'
+    # Mongo Port
+    MONGO_PORT2 = 12345
+    # Mongo Username
+    MONGO_USERNAME2 = 'user2'
+    # Mongo Password
+    MONGO_PASSWORD2 = 'passwd2'
+    # Mongo DB name
+    MONGO_DBNAME2 = 'db_test2'
 
