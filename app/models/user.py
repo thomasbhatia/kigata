@@ -8,8 +8,11 @@ from app.helpers import generate_sid
 
 now = datetime.datetime.now()
 
+current_app.logger.warn(mongodb)
+
+
 class User(Model):
-    collection = mongodb.db.users
+    collection = mongodb.users
 
     def __unicode__(self):
         return self.person_id
@@ -58,6 +61,7 @@ class User(Model):
 
         new_user = cls.get({'_id': ObjectId(user.id)})
         return new_user
+
 
 # User Schema
 class UserSchema(Schema):
