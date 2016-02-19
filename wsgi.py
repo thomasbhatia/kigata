@@ -6,7 +6,7 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, PROJECT_ROOT)
 
 # Activates the virtualenv environment
-activate_this = PROJECT_ROOT+'/.env/bin/activate_this.py'
+activate_this = PROJECT_ROOT + '/.env/bin/activate_this.py'
 execfile(activate_this, dict(__file__=activate_this))
 
 # Preserve the order of imports here!
@@ -22,4 +22,4 @@ RestApiView.register(application)
 if __name__ == '__main__':
     application.run(
         host=application.config['HOST'],
-        )
+    )
