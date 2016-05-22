@@ -1,5 +1,6 @@
 from flask import Flask
 from pymongo import MongoClient
+import urllib
 
 
 def create_app(package_name, package_path, settings_override=None):
@@ -52,11 +53,11 @@ def configure_mongodb(app):
     global mongodb
     mongo_server = app.config['MONGO_SERVER']
     mongo_port = app.config['MONGO_PORT']
-    mongo_user = app.config['MONGO_USERNAME']
-    mongo_passwd = app.config['MONGO_PASSWORD']
+    mongo_user = urllib.quote_plus(app.config['MONGO_USERNAME'])
+    mongo_passwd = urllib.quote_plus(app.config['MONGO_PASSWORD'])
     mongo_db = app.config['MONGO_DBNAME']
-    (connect_string) = ("mongodb://" + mongo_user + ':' + mongo_passwd + '@' +
-                      mongo_server + ':' + mongo_port + "/" + mongo_db)
+    (connect_string) = ('mongodb://mongo_user:' + mongo_passwd + '@' +
+                      mongo_server + '/' + str(mongo_port) + '/' + mongo_db)
     connection = MongoClient(connect_string)
     mongodb = connection[mongo_db]
 
