@@ -1,15 +1,16 @@
-from flask import request, jsonify, current_app, abort, make_response,json, session
 from functools import wraps
+
+from flask import request, jsonify, current_app, app
 
 
 def authenticate(authorization):
-    from app.models.user import User
+    from model import User
     import jwt
 
     current_app.logger.info(authorization)
 
     try:
-        auth_method, token = authorization.split(' ')
+        auth_method, token = authorization.split(':')
         decoded = jwt.decode(token, '', algorithm='HS256', verify=False)
     except Exception, e:
         current_app.logger.warn(e)
@@ -25,7 +26,7 @@ def authenticate(authorization):
         try:
             if auth_method == 'KIGATA':
                 current_app.logger.info(user._id)
-                decoded = jwt.decode(token, user.secret, algorithm='HS256')
+                jwt.decode(token, user.secret, algorithm='HS256')
             else:
                 return False
         except jwt.DecodeError:
@@ -41,14 +42,11 @@ def authenticate(authorization):
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        authorization = request.headers.get('Authorization')
-
-        user = authenticate(authorization)
+        user = authenticate(request.headers.get('Authorization'))
         if not user:
             response = dict(status='error', data=dict(authentication='failed'))
             return jsonify(response), 401
         else:
             kwargs['user'] = user
-
         return f(*args, **kwargs)
     return decorated_function

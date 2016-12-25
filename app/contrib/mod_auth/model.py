@@ -1,18 +1,16 @@
-from app.models import Model
-from app.factory import mongodb
+from app.contrib.mongotalk import MongoTalk
 import datetime
 from marshmallow import Schema, fields, ValidationError
 from flask import current_app, json
 from bson import ObjectId
 from app.helpers import generate_sid
+from app.contrib.mongotalk import mongodb
 
 now = datetime.datetime.now()
 
-current_app.logger.warn(mongodb)
 
-
-class User(Model):
-    collection = mongodb.users
+class User(MongoTalk):
+    collection = mongodb.db.users
 
     def __unicode__(self):
         return self.person_id
@@ -56,9 +54,6 @@ class User(Model):
         current_app.logger.warn(data)
         user = cls(data)
         user.save()
-
-        current_app.logger.info(user.id)
-
         new_user = cls.get({'_id': ObjectId(user.id)})
         return new_user
 
@@ -73,4 +68,6 @@ class UserSchema(Schema):
     date_joined = fields.DateTime(dump_only=True)
     secret = fields.Str()
     email = fields.Email(required=True)
+
+
 

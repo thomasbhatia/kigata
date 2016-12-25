@@ -1,11 +1,12 @@
 import pymongo.errors
+from flask.ext.pymongo import PyMongo
+
 OperationFailure = pymongo.errors.OperationFailure
 
+mongodb = PyMongo()
 
-class Model(object):
 
-    collection = None
-
+class MongoTalk(object):
     def __init__(self, result):
         self._fields = result
 
@@ -36,17 +37,6 @@ class Model(object):
 
     id = property(get_id)
     doc = property(get_doc)
-
-    @classmethod
-    def get_person_id(cls, person_id):
-        if cls.collection:
-            person_id = person_id.upper()
-            result = cls.collection.find_one(dict(person_id=person_id))
-            if result:
-                for k, v in result.iteritems():
-                    setattr(cls, k, v)
-                return cls
-        return None
 
     @classmethod
     def get(cls, spec):

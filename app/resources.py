@@ -1,18 +1,15 @@
 from flask import request, jsonify, current_app
 from flask.ext.classy import FlaskView, route
-from app.mod_auth import login_required
+from app.contrib.mod_auth import login_required
 
 
-# We have User and UserSchema functions here to escape the circular import hell.
 def User(arg=None):
-    from app.models.user import User
-
+    from app.contrib.mod_auth.model import User
     return User(arg)
 
 
 def UserSchema():
-    from app.models.user import UserSchema
-
+    from app.contrib.mod_auth.model import UserSchema
     return UserSchema()
 
 
@@ -26,9 +23,6 @@ class RestApiView(FlaskView):
 
     @route('/users', methods=['POST'])
     def new_user(self, **kwargs):
-        from app.models.user import UserSchema
-        from app.models.user import User
-
         json_data = request.get_json()
         if not json_data:
             response = dict(status='error', data=dict(payload='JSON payload required'))
@@ -60,7 +54,6 @@ class RestApiView(FlaskView):
 
         return jsonify(response), 201
 
-
     @route('/users/me', methods=['GET'])
     @login_required
     def get_user(self, **kwargs):
@@ -79,8 +72,7 @@ class RestApiView(FlaskView):
     @route('/users/me', methods=['PATCH'])
     @login_required
     def edit_user(self, **kwargs):
-        from app.models.user import UserSchema
-        from app.models.user import User
+        # from app.contrib.mod_auth.user import User
 
         json_data = request.get_json()
         if not json_data:
