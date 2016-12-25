@@ -1,6 +1,7 @@
 from uuid import uuid4
 import arrow
 
+
 def generate_sid():
     return str(uuid4())
 

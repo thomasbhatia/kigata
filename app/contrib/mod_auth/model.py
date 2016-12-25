@@ -6,11 +6,10 @@ from bson import ObjectId
 from app.helpers import generate_sid
 from app.contrib.mongotalk import mongodb
 
-now = datetime.datetime.now()
-
 
 class User(MongoTalk):
     collection = mongodb.db.users
+    now = datetime.datetime.now()
 
     def __unicode__(self):
         return self.person_id
@@ -19,7 +18,6 @@ class User(MongoTalk):
     def get_json(cls):
         user_schema = UserSchema()
         data, errors = user_schema.dump(cls)
-        current_app.logger.warn(errors)
         if not errors:
             response = dict(status='success', data=data)
         else:
@@ -54,31 +52,21 @@ class User(MongoTalk):
             current_app.logger.debug(response)
             return jsonify(response), 422
         constants = dict(is_active=False,
-                         last_accessed=now,
-                         date_joined=now,
+                         last_accessed = cls.now,
+                         date_joined = cls.now,
                          shared_secret_renewal_interval=21600,  # 6 hours
                          time_to_renew_shared_secret=0,
                          get_settings=False,
                          secret=generate_sid()
                          )
         data.update(constants)
-        current_app.logger.warn(data)
-        current_app.logger.warn(User.get({'email': data['email']}))
         # Check if user is unique
-        is_unique = cls.get({'email': data['email']})
-        if is_unique:
-            current_app.logger.warn(is_unique.email)
-            bdata, errors = user_schema.dump(cls)
-            current_app.logger.warn(bdata)
+        if cls.get({'email': data['email']}):
             response = dict(status='error', error=dict(email='Not unique'))
-            return jsonify(response), 422
+            return jsonify(response), 409
         else:
-            current_app.logger.warn("asdf")
             user = cls(data)
-            current_app.logger.warn(user)
             user.save()
-            current_app.logger.warn(user)
-            # new_user = cls.get({'_id': ObjectId(user.id)})
             new_user = User.get({'_id': ObjectId(user.id)})
             current_app.logger.warn(new_user.email)
             data, errors = user_schema.dump(new_user)
