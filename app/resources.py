@@ -1,16 +1,19 @@
 from flask import request, jsonify, current_app
 from flask.ext.classy import FlaskView, route
 from app.contrib.mod_auth import login_required
+from functools import wraps
 
 
-def User(arg=None):
-    from app.contrib.mod_auth.model import User
-    return User(arg)
-
-
-def UserSchema():
-    from app.contrib.mod_auth.model import UserSchema
-    return UserSchema()
+# require login
+def json_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not request.get_json():
+            response = dict(status='error', data=dict(payload='JSON payload required'))
+            return jsonify(response), 400
+        else:
+            return f(*args, **kwargs)
+    return decorated_function
 
 
 class RestApiView(FlaskView):
@@ -22,11 +25,11 @@ class RestApiView(FlaskView):
         return jsonify(data=data)
 
     @route('/users', methods=['POST'])
+    @json_required
     def new_user(self, **kwargs):
+        from app.contrib.mod_auth.model import User
+        from app.contrib.mod_auth.model import UserSchema
         json_data = request.get_json()
-        if not json_data:
-            response = dict(status='error', data=dict(payload='JSON payload required'))
-            return jsonify(response), 400
 
         current_app.logger.info(json_data)
 
@@ -56,36 +59,13 @@ class RestApiView(FlaskView):
 
     @route('/users/me', methods=['GET'])
     @login_required
-    def get_user(self, **kwargs):
-        user = kwargs['user']
-
-        user_schema = UserSchema()
-
-        user_data, errors = user_schema.dump(user)
-
-        current_app.logger.warn(errors)
-
-        response = dict(status='success', data=user_data)
-
-        return jsonify(response), 200
+    def get(self, user):
+        return user.get_jsonify()
 
     @route('/users/me', methods=['PATCH'])
     @login_required
-    def edit_user(self, **kwargs):
-        # from app.contrib.mod_auth.user import User
-
+    @json_required
+    def update(self, user):
         json_data = request.get_json()
-        if not json_data:
-            response = dict(status='error', data=dict(payload='JSON payload required'))
-            return jsonify(response), 400
+        return user.update_user_json(json_data)
 
-        user = User.get({'email': json_data['email']})
-        current_app.logger.info(user)
-
-        if 'secret' in json_data:
-            User.update_passwd(json_data['secret'])
-
-        response = dict(status='success', data='User updated')
-        head = 200
-
-        return jsonify(response), head

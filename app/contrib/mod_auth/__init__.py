@@ -1,6 +1,5 @@
 from functools import wraps
-
-from flask import request, jsonify, current_app, app
+from flask import request, jsonify, current_app
 
 
 def authenticate(authorization):
@@ -33,8 +32,6 @@ def authenticate(authorization):
             return False
     else:
         return False
-
-    current_app.logger.info('OK')
     return user
 
 

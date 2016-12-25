@@ -50,9 +50,9 @@ class MongoTalk(object):
 
     @classmethod
     def set(cls, fields, safe=False):
-        cls.collection.update({'_id': cls._id}, {'$set': fields}, safe=safe)
+        cls.collection.update({'_id': cls._id}, {'$set': fields})
         cls._fields = cls.collection.find_one({'_id': cls._id})
 
     @classmethod
     def update(cls, fields):
-        cls.collection.update({'_id': cls._id}, {"$pull":fields})
+        cls.collection.update({'_id': cls._id}, {"$pull": fields})
