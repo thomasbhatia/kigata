@@ -23,7 +23,7 @@ class MongoTalk(object):
             self._fields[attr] = value
 
     def save(self):
-        self._fields['_id'] = self.collection.save(self._fields, safe=True)
+        self._fields['_id'] = self.collection.save(self._fields)
 
     def delete(self):
         self.collection.remove({'_id': self._fields.get('_id', None)})

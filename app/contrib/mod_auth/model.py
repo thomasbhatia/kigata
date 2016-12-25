@@ -16,7 +16,7 @@ class User(MongoTalk):
         return self.person_id
 
     @classmethod
-    def get_jsonify(cls):
+    def get_json(cls):
         user_schema = UserSchema()
         data, errors = user_schema.dump(cls)
         current_app.logger.warn(errors)
@@ -46,25 +46,44 @@ class User(MongoTalk):
 
     @classmethod
     def create_user(cls, *args):
-        """Creates and saves a User with the given username, e-mail and password."""
-        data = {}
-        if args:
-            data = args[0]
+        json_data = args[0]
+        user_schema = UserSchema()
+        data, errors = user_schema.load(json_data)
+        if errors:
+            response = dict(status='error', error=errors)
+            current_app.logger.debug(response)
+            return jsonify(response), 422
         constants = dict(is_active=False,
                          last_accessed=now,
                          date_joined=now,
-                         shared_secret_renewal_interval=21600, # 6 hours
+                         shared_secret_renewal_interval=21600,  # 6 hours
                          time_to_renew_shared_secret=0,
                          get_settings=False,
                          secret=generate_sid()
-        )
-
+                         )
         data.update(constants)
         current_app.logger.warn(data)
-        user = cls(data)
-        user.save()
-        new_user = cls.get({'_id': ObjectId(user.id)})
-        return new_user
+        current_app.logger.warn(User.get({'email': data['email']}))
+        # Check if user is unique
+        is_unique = cls.get({'email': data['email']})
+        if is_unique:
+            current_app.logger.warn(is_unique.email)
+            bdata, errors = user_schema.dump(cls)
+            current_app.logger.warn(bdata)
+            response = dict(status='error', error=dict(email='Not unique'))
+            return jsonify(response), 422
+        else:
+            current_app.logger.warn("asdf")
+            user = cls(data)
+            current_app.logger.warn(user)
+            user.save()
+            current_app.logger.warn(user)
+            # new_user = cls.get({'_id': ObjectId(user.id)})
+            new_user = User.get({'_id': ObjectId(user.id)})
+            current_app.logger.warn(new_user.email)
+            data, errors = user_schema.dump(new_user)
+            response = dict(status='success', data=data)
+            return jsonify(response), 201
 
     @classmethod
     def update_user_json(cls, *args):
@@ -100,7 +119,6 @@ class UserSchema(Schema):
 
     @validates_schema(pass_original=True)
     def check_empty_fields(self, data, original_data):
-        current_app.logger.debug(original_data)
         for key, value in original_data.iteritems():
             if value == '' or not value:
                 raise ValidationError(['Empty value for field name'], format(key))

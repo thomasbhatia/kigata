@@ -26,46 +26,21 @@ class RestApiView(FlaskView):
 
     @route('/users', methods=['POST'])
     @json_required
-    def new_user(self, **kwargs):
+    def post(self):
+        """Required values: first_name, last_name, email"""
         from app.contrib.mod_auth.model import User
-        from app.contrib.mod_auth.model import UserSchema
         json_data = request.get_json()
-
-        current_app.logger.info(json_data)
-
-        user_schema = UserSchema()
-        data, errors = user_schema.load(json_data)
-
-        if errors:
-            response = dict(status='error', error=errors)
-            return jsonify(response), 422
-
-        # Check if user is unique
-        user = User.get({'email': data['email']})
-
-        if user:
-            response = dict(status='error', error=dict(email='Not unique'))
-            return jsonify(response), 422
-
-        current_app.logger.info(data)
-
-        new_user = User.create_user(data)
-
-        user_schema = UserSchema()
-        user_data, errors = user_schema.dump(new_user)
-        response = dict(status='success', data=user_data)
-
-        return jsonify(response), 201
+        return User.create_user(json_data)
 
     @route('/users/me', methods=['GET'])
     @login_required
     def get(self, user):
-        return user.get_jsonify()
+        return user.get_json()
 
     @route('/users/me', methods=['PATCH'])
     @login_required
     @json_required
-    def update(self, user):
+    def patch(self, user):
         json_data = request.get_json()
         return user.update_user_json(json_data)
 
